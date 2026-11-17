@@ -3,78 +3,90 @@
 const input = document.getElementById("userInput");
 const button = document.querySelector("button");
 
-// Voice response
+const output = document.createElement("div");
+output.id = "response";
+output.style.marginTop = "25px";
+output.style.padding = "15px";
+output.style.maxWidth = "500px";
+output.style.color = "white";
+document.body.appendChild(output);
+
 function speak(text) {
     const speech = new SpeechSynthesisUtterance(text);
     speech.lang = "en-US";
     speech.rate = 1;
-    window.speechSynthesis.speak(speech);
+    speechSynthesis.speak(speech);
 }
 
-// Ask FRIDAY
-function askFriday() {
-    const question = input.value.trim();
+async function askFriday() {
+    const message = input.value.trim();
 
-    if (!question) {
-        speak("Please ask me something.");
+    if (!message) {
+        output.textContent = "Please enter a question.";
         return;
     }
 
-    let answer = "";
+    output.textContent = "FRIDAY is thinking...";
+    button.disabled = true;
 
-    if (question.toLowerCase().includes("hello")) {
-        answer = "Hello! I am FRIDAY AI. How can I help you?";
-    }
-    else if (question.toLowerCase().includes("your name")) {
-        answer = "My name is FRIDAY AI version 3.0.";
-    }
-    else if (question.toLowerCase().includes("time")) {
-        answer = "The time is " +
-            new Date().toLocaleTimeString();
-    }
-    else if (question.toLowerCase().includes("date")) {
-        answer = "Today's date is " +
-            new Date().toLocaleDateString();
-    }
-    else {
-        answer = "I am FRIDAY AI. I am ready to help you.";
-    }
+    try {
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message })
+        });
 
-    alert(answer);
-    speak(answer);
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "AI request failed");
+        }
+
+        output.textContent = "FRIDAY: " + data.reply;
+        speak(data.reply);
+
+    } catch (error) {
+        output.textContent = "Error: " + error.message;
+    } finally {
+        button.disabled = false;
+    }
 }
 
-// Button event
 button.addEventListener("click", askFriday);
 
-// Voice recognition
+input.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        askFriday();
+    }
+});
+
+// Voice input
 function startListening() {
-    const SpeechRecognition =
+    const Recognition =
         window.SpeechRecognition ||
         window.webkitSpeechRecognition;
 
-    if (!SpeechRecognition) {
-        alert("Voice recognition is not supported in this browser.");
+    if (!Recognition) {
+        alert("Voice recognition is not supported.");
         return;
     }
 
-    const recognition = new SpeechRecognition();
-
-    recognition.lang = "en-US";
-    recognition.start();
+    const recognition = new Recognition();
+    recognition.lang = "en-IN";
 
     recognition.onresult = function(event) {
         input.value = event.results[0][0].transcript;
         askFriday();
     };
+
+    recognition.start();
 }
 
-// Voice command
 const voiceButton = document.createElement("button");
-
 voiceButton.textContent = "🎤 Speak to FRIDAY";
 voiceButton.onclick = startListening;
-
 document.body.appendChild(voiceButton);
 
 console.log("FRIDAY AI 3.0 Ready!");
