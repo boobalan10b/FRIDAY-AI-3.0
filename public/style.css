@@ -1,0 +1,95 @@
+/* FRIDAY AI 3.0 - MAIN DESIGN */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #050816, #101b35, #001d35);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* MAIN HEADING */
+
+h1 {
+    font-size: 45px;
+    color: #00eaff;
+    text-shadow: 0 0 15px #00eaff;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+h2 {
+    color: #b8dfff;
+    font-size: 20px;
+    margin-bottom: 35px;
+    text-align: center;
+}
+
+/* INPUT BOX */
+
+input {
+    width: 90%;
+    max-width: 500px;
+    padding: 17px;
+    border: 2px solid #00eaff;
+    border-radius: 12px;
+    background: #101b35;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    box-shadow: 0 0 12px #007bff;
+}
+
+input::placeholder {
+    color: #9bbbd5;
+}
+
+input:focus {
+    box-shadow: 0 0 20px #00eaff;
+}
+
+/* BUTTON */
+
+button {
+    margin-top: 25px;
+    padding: 15px 35px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #007bff, #00eaff);
+    color: #001020;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 25px #00eaff;
+}
+
+/* MOBILE DESIGN */
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 32px;
+    }
+
+    h2 {
+        font-size: 17px;
+    }
+
+    input {
+        width: 100%;
+    }
+}
